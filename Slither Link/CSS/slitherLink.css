@@ -1,0 +1,57 @@
+#puzzle-container{
+  cursor: context-menu;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.line{
+  transform: scale(1); /*for zooming */
+  display: inline-block;
+  color: white;
+  text-align: center;
+  font-family: Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 17px;
+}
+.horizontal-line{
+  width: 100px;
+  height: 20px;
+  line-height: 20px;
+}
+.vertical-line{
+  width: 20px;
+  height: 100px;
+  line-height: 100px;
+  overflow: hidden;
+}
+.dot{
+  transform: scale(1);
+  display: inline-block;
+  background-color: black;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+}
+
+#puzzle-container br{
+  display: block;
+  content: "";
+  margin-top: 4px;
+}
+#puzzle-container br.after-vertical{
+  margin-top: 0px;
+}
+.num-box{
+  transform: scale(1);
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  color: black;
+  line-height: 100px;
+  text-align: center;
+  font-size: 50px;
+  overflow: hidden;
+}
