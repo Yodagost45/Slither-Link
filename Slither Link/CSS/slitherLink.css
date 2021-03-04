@@ -6,46 +6,33 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  transform: scale(0.95);
 }
 .line{
-  transform: scale(1); /*for zooming */
   display: inline-block;
   color: white;
   text-align: center;
   font-family: Helvetica, sans-serif;
   font-weight: bold;
-  font-size: 17px;
-}
-.horizontal-line{
-  width: 100px;
-  height: 20px;
-  line-height: 20px;
-}
-.vertical-line{
-  width: 20px;
-  height: 100px;
-  line-height: 100px;
   overflow: hidden;
 }
+
+.vertical-line{
+  margin: 0 4px;
+}
+
 .dot{
-  transform: scale(1);
   display: inline-block;
   background-color: black;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
+  margin: 0 4px;
+  overflow: hidden;
 }
 
 #puzzle-container br{
   display: block;
   content: "";
-  margin-top: 4px;
-}
-#puzzle-container br.after-vertical{
-  margin-top: 0px;
 }
 .num-box{
-  transform: scale(1);
   display: inline-block;
   width: 100px;
   height: 100px;
