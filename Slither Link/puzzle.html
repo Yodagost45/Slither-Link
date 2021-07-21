@@ -3,16 +3,25 @@
   <head>
     <title>Slither Link</title>
     <script type="text/javascript" src="JS/slitherLink.js"></script>
+    <script src="JS/chai.js" type="text/javascript"></script>
     <link rel="stylesheet" href="CSS/slitherLink.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
   </head>
   <body>
+    <h1>alkjsd</h1>
     <div id="puzzle-container">
       <script type="text/javascript">
         display_board();
       </script>
-      <button name="rule one" type="button" value="rule one" onclick="rule_one()">rule one</button>
-      <button name="rule two" onclick="rule_two()">rule two</button>
-      <button onclick="update_board()">update board</button>
+      <div id="puzzle-buttons">
+        <button name="toggle x" onclick="toggle_x()">X</button>
+        <button name="restart" onclick="reset_board()">&#8635</button>
+        <button name="hint" onclick="hint()">&#9733</button>
+        <button name="complete" onclick="complete()">&#8611</button>
+        <button name="new puzzle" onclick="new_puzzle()">+</button>
+        <button name="undo" onclick="undo()">&#8592</button>
+        <button name="redo" onclick="redo()">&#8594</button>
+      </div>
     </div>
   </body>
 </html>
