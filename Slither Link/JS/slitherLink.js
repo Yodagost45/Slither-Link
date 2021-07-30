@@ -2,26 +2,45 @@ function leftClick(line){
   lineId = line.getAttribute("id");
   idOne = lineId.substring(0,1);
   idTwo = lineId.substring(2,3);
-
-  if(lineId.includes("horizontal")){
-    if(horizontalLines[idOne][idTwo].state == 1){
-      horizontalLines[idOne][idTwo].state = 0;
-      line.style.backgroundColor = "white";
-      line.style.color = "white";
-    }else{
-      horizontalLines[idOne][idTwo].state = 1;
-      line.style.backgroundColor = "black";
-      line.style.color = "black";
-    }
+  if(xToggled){
+    rightClick(line);
   }else{
-    if(verticalLines[idOne][idTwo].state == 1){
-      verticalLines[idOne][idTwo].state = 0;
-      line.style.backgroundColor = "white";
-      line.style.color = "white";
+    if(lineId.includes("horizontal")){
+      if(horizontalLines[idOne][idTwo].state == 1){
+        horizontalLines[idOne][idTwo].state = 0;
+        line.style.backgroundColor = "white";
+        line.style.color = "white";
+      }else{
+        horizontalLines[idOne][idTwo].state = 1;
+        line.style.backgroundColor = "black";
+        line.style.color = "black";
+        if(check_solution()){
+          clearInterval(clock);
+          if(hintUsed){
+            pop_up("user_completed", "Finished! Do you want to view the leaderboard? (time cannot be saved as hints were used)", "");
+          }else{
+            pop_up("user_completed", "Finished! Do you want to add your time to the leaderboard?", "");
+          }
+        }
+      }
     }else{
-      verticalLines[idOne][idTwo].state = 1;
-      line.style.backgroundColor = "black";
-      line.style.color = "black";
+      if(verticalLines[idOne][idTwo].state == 1){
+        verticalLines[idOne][idTwo].state = 0;
+        line.style.backgroundColor = "white";
+        line.style.color = "white";
+      }else{
+        verticalLines[idOne][idTwo].state = 1;
+        line.style.backgroundColor = "black";
+        line.style.color = "black";
+        if(check_solution()){
+          clearInterval(clock);
+          if(hintUsed){
+            pop_up("user_completed", "Finished! Do you want to view the leaderboard? (time cannot be saved as hints were used)", "");
+          }else{
+            pop_up("user_completed", "Finished! Do you want to add your time to the leaderboard?", "");
+          }
+        }
+      }
     }
   }
 
@@ -103,6 +122,9 @@ function display_board(){
     num_boxes[i].style = `width: ${dotWidth*5}px; height: ${dotWidth*5}px; line-height: ${dotWidth*5}px; font-size: ${dotWidth*5/2}px;`;
   }
   update_board();
+  timeElapsed = 0;
+  clock = setInterval(timer, 1000);
+
 }
 function update_board(){
   //updates lines filled in based on horizontalLines and verticalLines
@@ -138,6 +160,26 @@ function update_board(){
   }
 }
 
+function timer(){
+  //Every second adds an integer to the timer
+  timeElapsed += 1;
+  document.getElementById("timer").innerHTML = seconds_to_time(timeElapsed);
+}
+function seconds_to_time(timeElapsed){
+  var minutes = Math.floor(timeElapsed/60);
+  var seconds = timeElapsed%60;
+  if(minutes < 10 && seconds < 10){
+    time = "0"+minutes+":0"+seconds;
+  }else if(minutes >= 10 && seconds < 10){
+    time = minutes+":0"+seconds;
+  }else if(minutes < 10 && seconds >= 10){
+    time = "0"+minutes+":"+seconds;
+  }else if(minutes >= 10 && seconds >= 10){
+    time = minutes+":"+seconds;
+  }
+  return time;
+}
+
 function initiate_horizontalLines(){
   //returns horizontalLines based on squares
   array = [];
@@ -164,79 +206,326 @@ function initiate_verticalLines(){
   }
   return array;
 }
-function initiate_squares(){
-  puzzles = {
-/*    "0": [[3, 4, 1, 4, 3],
-          [4, 3, 4, 3, 4],
-          [3, 2, 4, 2, 3],
-          [2, 4, 4, 4, 4],
-          [4, 4, 4, 4, 3]],
-    "1": [[4, 3, 4, 1, 4],
-          [4, 0, 3, 4, 4],
-          [4, 2, 4, 4, 4],
-          [2, 0, 4, 2, 4],
-          [4, 2, 4, 2, 4]],
-    "2": [[4, 3, 4, 1],
-          [4, 0, 3, 4],
-          [4, 2, 4, 4],
-          [2, 0, 4, 2]],
-    "3": [[4, 4, 4],
-          [4, 4, 0],
-          [4, 3, 4]],
-    "4": [[4, 3, 2, 2, 3, 4, 0],
-          [4, 4, 1, 4, 1, 4, 2],
-          [4, 4, 3, 4, 4, 4, 3],
-          [4, 2, 2, 4, 3, 1, 3],
-          [4, 4, 3, 4, 4, 2, 2],
-          [4, 4, 2, 4, 4, 4, 2],
-          [4, 4, 4, 4, 4, 2, 3]],*/
-    "0": [[4, 3, 3, 2, 3, 3, 4],
-          [4, 2, 4, 2, 1, 4, 2],
-          [3, 4, 2, 4, 2, 3, 4],
-          [1, 4, 1, 4, 4, 1, 4],
-          [2, 2, 2, 4, 4, 2, 1],
-          [4, 4, 4, 1, 4, 4, 4],
-          [3, 4, 4, 4, 4, 4, 4]],
-    "1": [[4, 2, 4, 3, 2, 4, 3],
-          [4, 2, 1, 4, 4, 2, 4],
-          [3, 4, 4, 4, 2, 4, 4],
-          [3, 4, 2, 4, 1, 2, 1],
-          [4, 2, 4, 2, 4, 4, 4],
-          [4, 3, 3, 4, 4, 1, 4],
-          [3, 4, 4, 1, 3, 2, 4]],
-    "2": [[2, 2, 4, 4, 4, 4, 4],
-          [4, 4, 3, 4, 2, 2, 4],
-          [4, 4, 4, 2, 4, 1, 4],
-          [3, 4, 4, 1, 4, 2, 2],
-          [2, 2, 3, 4, 4, 2, 2],
-          [4, 4, 3, 4, 4, 3, 4],
-          [4, 2, 4, 4, 3, 4, 3]],
-    "3": [[4, 2, 2, 4, 4, 2, 4],
-          [4, 4, 2, 2, 3, 4, 3],
-          [4, 2, 4, 2, 4, 1, 4],
-          [2, 2, 2, 4, 4, 4, 3],
-          [3, 4, 2, 1, 2, 0, 3],
-          [4, 2, 2, 2, 4, 4, 3],
-          [4, 4, 4, 2, 4, 4, 4]],
-          /*
-    "0": [[4,2,2,3,4,3,3,4,3,4],
-          [3,4,4,2,3,4,4,4,4,4],
-          [2,4,4,1,4,4,4,2,3,4],
-          [4,3,4,4,4,3,4,4,2,2],
-          [2,4,1,1,4,2,2,4,2,3],
-          [1,4,4,4,4,4,2,1,3,4],
-          [4,2,4,4,4,2,4,4,4,3],
-          [4,2,4,4,3,1,2,1,3,4],
-          [4,4,3,2,4,4,4,1,1,4],
-          [4,2,2,4,4,4,4,4,1,4]],*/
-  }
-  //return puzzles[Math.floor(Math.random()*Object.keys(puzzles).length)];
-  return puzzles[1];
+async function initiate_squares(difficulty_size){
+  const puzzle = await axios.get('http://127.0.0.1:5000/newpuzzle', {params:  {
+    puzzle_type: difficulty_size
+  }})
+  .then(function (response){
+    return response.data;
+  });
+  current_puzzle = difficulty_size;
+  return puzzle;
+  // puzzles = {
+  //   "0": [[3, 4, 1, 4, 3],
+  //         [4, 3, 4, 3, 4],
+  //         [3, 2, 4, 2, 3],
+  //         [2, 4, 4, 4, 4],
+  //         [4, 4, 4, 4, 3]],
+  //   "1": [[4, 3, 4, 1, 4],
+  //         [4, 0, 3, 4, 4],
+  //         [4, 2, 4, 4, 4],
+  //         [2, 0, 4, 2, 4],
+  //         [4, 2, 4, 2, 4]],
+  //   "2": [[4, 3, 4, 1],
+  //         [4, 0, 3, 4],
+  //         [4, 2, 4, 4],
+  //         [2, 0, 4, 2]],
+  //   "3": [[4, 4, 4],
+  //         [4, 4, 0],
+    //       [4, 3, 4]],
+    // "4": [[4, 3, 2, 2, 3, 4, 0],
+    //       [4, 4, 1, 4, 1, 4, 2],
+    //       [4, 4, 3, 4, 4, 4, 3],
+    //       [4, 2, 2, 4, 3, 1, 3],
+    //       [4, 4, 3, 4, 4, 2, 2],
+    //       [4, 4, 2, 4, 4, 4, 2],
+    //       [4, 4, 4, 4, 4, 2, 3]],
+  //   "5": [[4, 3, 3, 2, 3, 3, 4],
+  //         [4, 2, 4, 2, 1, 4, 2],
+  //         [3, 4, 2, 4, 2, 3, 4],
+  //         [1, 4, 1, 4, 4, 1, 4],
+  //         [2, 2, 2, 4, 4, 2, 1],
+  //         [4, 4, 4, 1, 4, 4, 4],
+  //         [3, 4, 4, 4, 4, 4, 4]],
+  //   "6": [[4, 2, 4, 3, 2, 4, 3],
+  //         [4, 2, 1, 4, 4, 2, 4],
+  //         [3, 4, 4, 4, 2, 4, 4],
+  //         [3, 4, 2, 4, 1, 2, 1],
+  //         [4, 2, 4, 2, 4, 4, 4],
+  //         [4, 3, 3, 4, 4, 1, 4],
+  //         [3, 4, 4, 1, 3, 2, 4]],
+  //   "7": [[2, 2, 4, 4, 4, 4, 4],
+  //         [4, 4, 3, 4, 2, 2, 4],
+  //         [4, 4, 4, 2, 4, 1, 4],
+  //         [3, 4, 4, 1, 4, 2, 2],
+  //         [2, 2, 3, 4, 4, 2, 2],
+  //         [4, 4, 3, 4, 4, 3, 4],
+  //         [4, 2, 4, 4, 3, 4, 3]],
+  //   "8": [[4, 2, 2, 4, 4, 2, 4],
+  //         [4, 4, 2, 2, 3, 4, 3],
+  //         [4, 2, 4, 2, 4, 1, 4],
+  //         [2, 2, 2, 4, 4, 4, 3],
+  //         [3, 4, 2, 1, 2, 0, 3],
+  //         [4, 2, 2, 2, 4, 4, 3],
+    //       [4, 4, 4, 2, 4, 4, 4]],
+    // "9": [[4,2,2,3,4,3,3,4,3,4],
+    //       [3,4,4,2,3,4,4,4,4,4],
+    //       [2,4,4,1,4,4,4,2,3,4],
+    //       [4,3,4,4,4,3,4,4,2,2],
+    //       [2,4,1,1,4,2,2,4,2,3],
+    //       [1,4,4,4,4,4,2,1,3,4],
+    //       [4,2,4,4,4,2,4,4,4,3],
+    //       [4,2,4,4,3,1,2,1,3,4],
+    //       [4,4,3,2,4,4,4,1,1,4],
+    //       [4,2,2,4,4,4,4,4,1,4]],
+  // }
+  // //return puzzles[Math.floor(Math.random()*Object.keys(puzzles).length)];
+  // return puzzles[9];
 }
 
+//BUTTONS ******************************************************************************************************************************************************************************************************************
 
-//AI **************************************************************************
-//CLASSES**********************************************************************
+function pop_up(function_name, message, arguments){
+  var confirmationBackground = document.getElementById("confirmation-popup");
+  var confirmation = document.getElementById("confirmation");
+  confirmation.innerHTML = message;
+  confirmation.innerHTML += `<br/><br/><button onclick="run_popup('${function_name}', '${arguments}')">Ok</button>  <button onclick="cancel_popup()">Cancel</button>`
+  confirmationBackground.style.display = "block";
+}
+function cancel_popup(){
+  var confirmationBackground = document.getElementById("confirmation-popup");
+  confirmationBackground.style.display = "none";
+}
+function run_popup(function_name, arguments){
+  cancel_popup();
+  window[function_name](arguments);
+}
+function alert_box(message){
+  var confirmationBackground = document.getElementById("confirmation-popup");
+  var confirmation = document.getElementById("confirmation");
+  confirmation.innerHTML = message;
+  confirmation.innerHTML += `<br/><br/><button onclick="cancel_popup()">Ok</button>`
+  confirmationBackground.style.display = "block";
+}
+function reset_board(){
+  verticalLines = initiate_verticalLines();
+  horizontalLines = initiate_horizontalLines();
+  update_board();
+}
+function hint(){
+  hintUsed = true;
+  //highlight mistakes
+  if(highlight_mistakes()){
+    return true;
+  }
+  //do rules until state is changed
+  stateChanged = false;
+  starting_techniques();
+  if(stateChanged){
+    return true;
+  }
+  rule_one();
+  if(stateChanged){
+    return true;
+  }
+  rule_two();
+  if(stateChanged){
+    return true;
+  }
+  rule_three();
+  if(stateChanged){
+    return true;
+  }
+  rule_four();
+  if(stateChanged){
+    return true;
+  }
+  Xs_diagonal_to_three();
+  if(stateChanged){
+    return true;
+  }
+  line_connecting_to_three();
+  if(stateChanged){
+    return true;
+  }
+  line_connecting_to_one();
+  if(stateChanged){
+    return true;
+  }
+  alert_box("You have made a mistake! Go back and check all your moves were definite.");
+}
+function highlight_mistakes(){
+  for(i=0; i < squares.length; i++){
+    for(j=0; j < squares.length; j++){
+      //check no vertexs have 3 or 4 lines connected
+      thingsToHighlight = [];
+      if(check_one(i, j, "horizontal")){
+        thingsToHighlight.push([i,j,"horizontal"]);
+      }
+      if(check_one(i, j-1, "horizontal")){
+        thingsToHighlight.push([i,j-1,"horizontal"]);
+      }
+      if(check_one(i, j, "vertical")){
+        thingsToHighlight.push([i,j,"vertical"]);
+      }
+      if(check_one(i-1, j, "vertical")){
+        thingsToHighlight.push([i-1,j,"vertical"]);
+      }
+      if(thingsToHighlight.length > 2){
+        //highlight them as red
+        for(let n=0; n < thingsToHighlight.length; n++){
+          highlight_red(thingsToHighlight[n][0],thingsToHighlight[n][1],thingsToHighlight[n][2]);
+        }
+        return true;
+      }
+
+      //check numbers aren't overloaded (e.g. 3 lines around a 2)
+      if(squares[i][j] != 4){
+        if(squares[i][j] < horizontalLines[i][j].remove_x() + horizontalLines[i+1][j].remove_x() + verticalLines[i][j].remove_x() + verticalLines[i][j+1].remove_x()){
+          //highlight lines red
+          thingsToHighlight = [[i,j,"horizontal"],[i+1,j,"horizontal"],[i,j,"vertical"],[i,j+1,"vertical"]];
+          for(let n=0; n < thingsToHighlight.length; n++){
+            if(check_one(thingsToHighlight[n][0],thingsToHighlight[n][1],thingsToHighlight[n][2])){
+              highlight_red(thingsToHighlight[n][0],thingsToHighlight[n][1],thingsToHighlight[n][2]);
+            }
+          }
+          return true;
+        }
+        //check numbers don't have too many Xs around them
+        if((4-squares[i][j]) < (horizontalLines[i][j].remove_one() + horizontalLines[i+1][j].remove_one() + verticalLines[i][j].remove_one() + verticalLines[i][j+1].remove_one())/2){
+          //highlight all four lines as red
+          thingsToHighlight = [[i,j,"horizontal"],[i+1,j,"horizontal"],[i,j,"vertical"],[i,j+1,"vertical"]];
+          for(let n=0; n < thingsToHighlight.length; n++){
+            if(check_x(thingsToHighlight[n][0],thingsToHighlight[n][1],thingsToHighlight[n][2])){
+              highlight_red(thingsToHighlight[n][0],thingsToHighlight[n][1],thingsToHighlight[n][2]);
+            }
+          }
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+function highlight_red(i, j, orientation){
+  line = document.getElementById(`${i},${j},${orientation}`);
+  line.style.backgroundColor = "red";
+  line.style.color = "red";
+}
+function new_puzzle(){
+  var leaderboardBackground = document.getElementById("leaderboard-popup");
+  leaderboardBackground.style.display = "none";
+  var popup = document.getElementById("new-puzzle-popup");
+  popup.style.display = "block";
+}
+async function load_puzzle(difficulty_size){
+  hintUsed = false;
+  uploaded = false;
+  var popup = document.getElementById("new-puzzle-popup");
+  popup.style.display = "none";
+  var actionPane = document.getElementById("action-pane");
+  actionPane.style.display = "block";
+  var timerDiv = document.getElementById("timer");
+  timerDiv.innerHTML = "00:00";
+  clearInterval(clock);
+  squares = await initiate_squares(difficulty_size);
+  verticalLines = initiate_verticalLines();
+  horizontalLines = initiate_horizontalLines();
+  display_board();
+}
+window.onclick = function(event) {
+  var backgrounds = document.getElementsByClassName("pop-up");
+  for (let i = 0; i < backgrounds.length; i++) {
+    if (event.target == backgrounds[i]) {
+      backgrounds[i].style.display = "none";
+    }
+  }
+}
+function user_completed(){
+  if(hintUsed){
+    show_leaderboard(current_puzzle, "hint");
+  }else if(uploaded){
+    alert_box("You've already uploaded this time!")
+  }else{
+    name = prompt("Enter your name: ");
+    if(!(name == null || name == "" || name == "null")){
+      add_to_leaderboard(name);
+    }
+  }
+}
+function add_to_leaderboard(name){
+  axios.post('http://127.0.0.1:5000/highscore', {
+    name: name,
+    difficulty: current_puzzle,
+    time: timeElapsed
+  });
+  uploaded = true;
+  show_leaderboard(current_puzzle, name);
+}
+function show_leaderboard(puzzle_difficulty, name){
+  formated_difficulty = format_current_puzzle(puzzle_difficulty);
+  var leaderboardBackground = document.getElementById("leaderboard-popup");
+  var leaderboard = document.getElementById("leaderboard");
+  leaderboard.innerHTML = "";
+  leaderboard.innerHTML += `<button name="new puzzle" onclick="show_all_leaderboards()">Leaderboards</button> <h2>${formated_difficulty[0]} ${formated_difficulty[1]} Leaderboard</h2> <button name="new puzzle" onclick="new_puzzle()">New puzzle</button>`;
+
+  if(!!name){
+    leaderboard.innerHTML += `<h3>Your time: ${seconds_to_time(timeElapsed)}</h3>`;
+  }
+  //axios get leaderboard, display here (parse and sort top ten in python)
+  axios.get('http://127.0.0.1:5000/leaderboard', {params:  {
+    puzzle_type: puzzle_difficulty
+  }})
+  .then(function (response) {
+    // handle success
+    if(response.data.length > 0){
+      for(let i = 0; i < response.data.length; i++){
+        leaderboard.innerHTML += `<h3>${response.data[i]["name"]}: ${seconds_to_time(response.data[i]["time"])}</h3>`;
+      }
+    }else{
+      leaderboard.innerHTML += `<h3>Wow, such empty</h3>`;
+    }
+  })
+  leaderboard.innerHTML += '';
+  leaderboardBackground.style.display = "block";
+}
+function format_current_puzzle(puzzle_difficulty){
+  temp = puzzle_difficulty.charAt(0).toUpperCase() + puzzle_difficulty.slice(1);
+  formated_difficulty = temp.split("_");
+  return formated_difficulty;
+}
+function show_all_leaderboards(){
+  var leaderboardBackground = document.getElementById("leaderboard-popup");
+  var leaderboard = document.getElementById("leaderboard");
+  leaderboard.innerHTML = "";
+  leaderboard.innerHTML += "<h1>Leaderboards</h1>";
+  leaderboard.innerHTML += `<button class="leaderboard-button" onclick="show_leaderboard('easy_5x5')">Easy 5x5</button><br/>`;
+  leaderboard.innerHTML += `<button class="leaderboard-button" onclick="show_leaderboard('hard_5x5')">Hard 5x5</button><br/>`;
+  leaderboard.innerHTML += `<button class="leaderboard-button" onclick="show_leaderboard('easy_7x7')">Easy 7x7</button><br/>`;
+  leaderboard.innerHTML += `<button class="leaderboard-button" onclick="show_leaderboard('hard_7x7')">Hard 7x7</button><br/>`;
+  leaderboardBackground.style.display = "block";
+}
+function toggle_x(){
+  var button = document.getElementById("toggle-x");
+  if(xToggled){
+    xToggled = false;
+    button.style.backgroundColor = "#efefef";
+    button.style.color = "black";
+  }else{
+    xToggled = true;
+    button.style.backgroundColor = "black";
+    button.style.color = "#efefef";
+    button.style.borderColor = "black";
+  }
+}
+function show_help(){
+  var helpBackground = document.getElementById("help-popup");
+  var helpContent = document.getElementById("help");
+  helpBackground.style.display = "block";
+}
+
+//AI **********************************************************************************************************************************************************************************************************************
+//CLASSES******************************************************************************************************************************************************************************************************************
 class Line{
   constructor(i, j, orientation){
     this.i = i;
@@ -464,18 +753,17 @@ class Line{
   }
 }
 
-horizontalLinesTemps = [];
-verticalLinesTemps = [];
-horizontalTemp = [];
-verticalTemp = [];
 
 function complete(){
+  reset_board();
   starting_techniques();
   backtracking_search();
+  clearInterval(clock);
+  hintUsed = true;
 }
 
 function starting_techniques(){
-  //all functions to be run at the begining of solving
+  //all functions to be run at the beginning of solving
   rule_one();
   Xs_diagonal_to_three();
   adjacent_threes();
@@ -1044,22 +1332,16 @@ function backtracking_search(edge_to_add){
   if(typeof edge_to_add !== "undefined"){
     //check for miniloop and number rules broken, also check if any point has 3 or 4 lines
     if(immediate_mistake(edge_to_add)){
-      console.log("Mistake made");
 
       return false;
     }
     depth_counter += 1;
-    console.log("Backtracking depth: ");
-    console.log(depth_counter);
     //add edge_to_add
-    console.log(edge_to_add);
     edge_to_add.set_state(1);
-    console.log(edge_to_add);
   }
   //Apply rules in a loop
   do{
     stateChanged = false;
-    console.log("rule loop")
     rule_one();
     rule_two();
     rule_three();
@@ -1071,7 +1353,6 @@ function backtracking_search(edge_to_add){
 
     //if mistake made, reverse changes and return false
     if(mistake_made()){
-      console.log("Mistake made!");
       reverse_changes();
       return false;
     }
@@ -1105,13 +1386,11 @@ function backtracking_search(edge_to_add){
       if(options[i][j].state == 0 && !success){
         success = backtracking_search(options[i][j]);
         if(success){
-          console.log("SUCCESS!");
           return true;
         }
       }
     }
   }
-  console.log("Return after failing all options");
   reverse_changes();
   return false;
 }
@@ -1380,13 +1659,16 @@ function check_solution(){
 
 
 
-squares = initiate_squares();
-
-horizontalLines = initiate_horizontalLines();
-verticalLines = initiate_verticalLines();
 
 depth_counter = 1;
 stateChanged = false;
+var clock;
+hintUsed = false;
+var current_puzzle;
+var uploaded = false;
+var undo_record = [];
+var redo_record = [];
+var xToggled = false;
 
 
 window.oncontextmenu = function(e){ e.preventDefault();}
