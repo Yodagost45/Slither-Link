@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mocha Tests</title>
+    <link rel="stylesheet" href="node_modules/mocha/mocha.css">
+  </head>
+  <body>
+    <div id="mocha"></div>
+    <script src="node_modules/mocha/mocha.js"></script>
+    <script src="node_modules/chai/chai.js"></script>
+    <script>mocha.setup('bdd')</script>
+
+    <!-- load code you want to test here -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="JS/slitherLink.js"></script>
+
+    <!-- load your test files here -->
+    <script src="test/aiTest.js"></script>
+
+    <div style="display: none;">
+      <div id="new-puzzle-popup" class="pop-up">
+        <div id="new-puzzle-popup-content" class="popup-content">
+          <h2>Choose a puzzle difficulty:</h2>
+          <button onclick="load_puzzle('easy_5x5')">Easy 5x5</button><br/>
+          <button onclick="load_puzzle('hard_5x5')">Hard 5x5</button><br/>
+          <button onclick="load_puzzle('easy_7x7')">Easy 7x7</button><br/>
+          <button onclick="load_puzzle('hard_7x7')">Hard 7x7</button>
+        </div>
+      </div>
+      <div id="leaderboard-popup" class="pop-up">
+        <div id="leaderboard" class="popup-content">
+
+        </div>
+      </div>
+      <div id="help-popup" class="pop-up">
+        <div id="help" class="popup-content">
+          <!--Rules taken from https://www.nikoli.co.jp/en/puzzles/slitherlink.html -->
+          <h2>Rules:</h2>
+          <p>1. Connect adjacent dots with vertical or horizontal lines to make a single loop. <br/>
+            2. The numbers indicate how many lines surround it, while empty cells may be surrounded by any number of lines. <br/>
+            3. The loop never crosses itself and never branches off.</p>
+          <p>For more information on how to play, visit <a href="https://en.wikipedia.org/wiki/Slitherlink" target="_blank">https://en.wikipedia.org/wiki/Slitherlink</a></p>
+        </div>
+      </div>
+      <div id="confirmation-popup" class="pop-up">
+        <div id="confirmation" class="popup-content">
+
+        </div>
+      </div>
+      <h1><button name="newPuzzle" onclick="new_puzzle()">Slither Link</button> <button name="leaderboards" onclick="show_all_leaderboards()">Leaderboards</button></h1>
+      <div id="action-pane">
+        <h1 id="timer">00:00</h1>
+        <div id="puzzle-container">
+          <script type="text/javascript">
+            new_puzzle();
+          </script>
+        </div>
+
+        <div id="puzzle-buttons">
+          <button id="toggle-x" name="toggle x" onclick="toggle_x()">X</button>
+          <button name="restart" onclick="pop_up('reset_board', 'Are you sure you want to restart?', '')">&#8635</button>
+          <button name="hint" onclick="pop_up('hint', 'Would you like to receive a hint?', '')">&#9733</button>
+          <button name="complete" onclick="pop_up('complete', 'Are you sure you want to show the solution?', '')">&#8611</button>
+          <button name="new puzzle" onclick="new_puzzle()">+</button>
+          <button name="help" onclick="show_help()">?</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      mocha.run();
+    </script>
+  </body>
+</html>

@@ -1,12 +1,7 @@
 #puzzle-container{
-  cursor: context-menu;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  transform: scale(0.95);
+  line-height: 4px;
+  text-align: center;
+  cursor: default;
 }
 .line{
   display: inline-block;
@@ -15,16 +10,22 @@
   font-family: Helvetica, sans-serif;
   font-weight: bold;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .vertical-line{
   margin: 0 4px;
 }
 
+.horizontal-line{
+  margin: 4px 0;
+}
+
 .dot{
   display: inline-block;
+  color: black;
   background-color: black;
-  margin: 0 4px;
+  margin: 4px;
   overflow: hidden;
 }
 
@@ -41,4 +42,118 @@
   text-align: center;
   font-size: 50px;
   overflow: hidden;
+}
+
+@media screen and (max-width: 710px) {
+    #action-pane{
+      transform: scale(0.5) !important;
+      transform-origin: top left !important;
+      white-space: nowrap;
+      width: 680px;
+    }
+    .popup-content{
+      width: 450px !important;
+    }
+}
+
+#puzzle-buttons{
+  text-align: center;
+}
+
+#puzzle-buttons button{
+  border-style: solid;
+  border-width: 5px;
+  border-radius: 100%;
+  width: 70px;
+  padding: 0;
+  display: inline-block;
+  zoom: 1;
+  margin: 12px;
+  font-size: 50px;
+  line-height: 40px;
+  text-align: center;
+  padding: 10px 0;
+}
+button[name="new puzzle"]{
+  font-weight: bold;
+
+}
+
+a:hover{
+  text-decoration: none;
+}
+
+.pop-up{
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  background-color: rgba(0,0,0,0.25);
+  width: 100%;
+  height: 100%;
+
+}
+.popup-content{
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 150px;
+  border-style: solid;
+  border-width: 5px;
+  padding: 20px;
+  width: 600px;
+  background-color: white;
+  display: block;
+  text-align: center;
+}
+#new-puzzle-popup-content button{
+  width: 80%;
+}
+#timer{
+  text-align: center;
+  margin-top: 0px;
+}
+#action-pane{
+  transform: scale(0.85);
+  transform-origin: top center;
+  display: none;
+}
+body{
+  margin-top: 0px;
+  /*taken from https://stackoverflow.com/questions/16943267/how-do-i-make-it-impossible-to-highlight-text-using-css/16943686 */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* */
+  min-width: 534px;
+}
+#leaderboard button{
+  font-size: 15px;
+  padding: 10px;
+  width: 25%;
+}
+.leaderboard-button{
+  width: 80% !important;
+}
+#leaderboard h3{
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+#leaderboard h2{
+  margin-top: 0px;
+  width: 48%;
+  display: inline;
+}
+h1 button{
+  background-color: white;
+}
+h1 button[name="leaderboards"]{
+  float: right;
+
+}
+#confirmation button{
+  width: 20%;
 }
